@@ -1,0 +1,15 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "react-video",
+  "version": "1.0.0",
+  "description": "Моушн-ролик из веб-страницы: сцена на React или HTML рендерится покадрово в headless Chromium, музыка и эффекты синтезируются по той же сетке времени, на выходе mp4 для Reels, Shorts и Telegram.",
+  "author": {
+    "name": "Ilya Batko",
+    "url": "https://github.com/IliaBatko39"
+  },
+  "homepage": "https://github.com/IliaBatko39/react-video",
+  "repository": "https://github.com/IliaBatko39/react-video",
+  "license": "MIT",
+  "keywords": ["video", "motion", "reels", "react", "playwright", "ffmpeg", "promo", "showreel"],
+  "skills": ["./"]
+}

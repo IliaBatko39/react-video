@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "react-video",
+  "description": "Скилл react-video для Claude Code: моушн-ролики из веб-страниц.",
+  "owner": {
+    "name": "Ilya Batko",
+    "url": "https://github.com/IliaBatko39"
+  },
+  "plugins": [
+    {
+      "name": "react-video",
+      "description": "Моушн-ролик из веб-страницы: сцена на React или HTML рендерится покадрово в headless Chromium, музыка и эффекты синтезируются по той же сетке времени, на выходе mp4 для Reels, Shorts и Telegram.",
+      "source": "./",
+      "category": "design",
+      "homepage": "https://github.com/IliaBatko39/react-video",
+      "tags": ["video", "motion", "reels", "react", "playwright", "ffmpeg"]
+    }
+  ]
+}
