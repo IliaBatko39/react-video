@@ -1,9 +1,10 @@
-// Сцена 2: поле столбиков three.js с тенями. set(t) выставляет всё по времени — ни часов, ни physics-step.
+// Сцена 3D: поле столбиков three.js с тенями. draw(u, dur) выставляет всё по местному времени сцены u (0…dur) —
+// ни часов, ни physics-step. Сдвинуть сцену по таймлайну = передать другое u, код сцены не меняется.
 import * as THREE from 'three';
 import { P, E, lerp } from './util.js';
 
 const N = 7, STEP = 1.3, SIZE = .72;                 // сетка N×N столбиков
-const BEATS = [3.0, 3.5, 4.0];                       // доли, на которых от центра идёт волна (tick в timeline.json)
+const BEATS = [1.0, 1.5, 2.0];                       // доли от начала сцены: от центра идёт волна (tick в timeline.json)
 
 export function makeThree(canvas, W, H, accent) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true, alpha: true });
@@ -39,30 +40,29 @@ export function makeThree(canvas, W, H, accent) {
     scene.add(m); bars.push({ m, d, ph: (i * 7 + j * 3) % 5 * .35 });
   }
 
-  function set(t) {
-    // вход: камера опускается сверху (2,0 → 2,7 с); выход: быстрый наезд под whoosh (4,25 → 4,5 с)
-    const u = t - 2.0;
-    const drop = E.outExpo(P(t, 2.0, .7)), push = E.inExpo(P(t, 4.25, .25));
-    const ang = .78 + .16 * u, el = lerp(1.25, .62, drop), dist = lerp(40, 33, drop) * (1 - .55 * push);
+  function set(u, dur) {
+    // вход: камера опускается сверху (0 → 0,7 с); выход: быстрый наезд под whoosh (последние 0,25 с)
+    const drop = E.outExpo(P(u, 0, .7)), push = E.inExpo(P(u, dur - .25, .25));
+    const ang = .78 + .16 * u, el = lerp(1.25, .62, drop), dist = lerp(40, 33, drop) * (1 - .45 * push);
     cam.position.set(Math.sin(ang) * Math.cos(el) * dist, Math.sin(el) * dist, Math.cos(ang) * Math.cos(el) * dist);
-    cam.lookAt(0, lerp(-.6, -1.4, drop), 0);        // цель ниже центра — поле выше подписи
+    cam.lookAt(0, lerp(-.9, -1.9, drop) - 1.2 * push, 0);        // цель ниже центра — поле выше подписи
     cam.updateProjectionMatrix();
 
     for (const b of bars) {
       // медленная волна + импульсы от центра на долях
       let h = .35 + .9 * (.5 + .5 * Math.sin(b.d * 1.15 - u * 3.2 + b.ph));
       for (const tb of BEATS) {
-        const r = (t - tb) * 11;                       // радиус фронта, ед./с
-        if (r > 0) h += 1.6 * Math.exp(-((b.d - r) ** 2) * 1.4) * Math.exp(-(t - tb) * 2.2);
+        const r = (u - tb) * 11;                       // радиус фронта, ед./с
+        if (r > 0) h += 1.6 * Math.exp(-((b.d - r) ** 2) * 1.4) * Math.exp(-(u - tb) * 2.2);
       }
-      if (b.d < .1) h = 1.6 + .9 * Math.max(0, ...BEATS.map(tb => t >= tb ? Math.exp(-(t - tb) * 7) : 0)) + .3 * Math.sin(u * 3);
-      b.m.scale.set(1, Math.max(.05, h * E.outQuint(P(t, 2.0 + b.d * .04, .6))), 1);
+      if (b.d < .1) h = 1.6 + .9 * Math.max(0, ...BEATS.map(tb => u >= tb ? Math.exp(-(u - tb) * 7) : 0)) + .3 * Math.sin(u * 3);
+      b.m.scale.set(1, Math.max(.05, h * E.outQuint(P(u, b.d * .04, .6))), 1);
     }
-    rim.intensity = 30 + 40 * Math.max(0, ...BEATS.map(tb => t >= tb ? Math.exp(-(t - tb) * 6) : 0));
+    rim.intensity = 30 + 40 * Math.max(0, ...BEATS.map(tb => u >= tb ? Math.exp(-(u - tb) * 6) : 0));
   }
 
   return {
-    draw(t) { set(t); renderer.render(scene, cam); },
+    draw(u, dur) { set(u, dur); renderer.render(scene, cam); },
     clear() { renderer.setClearColor(0x000000, 0); renderer.clear(); }
   };
 }

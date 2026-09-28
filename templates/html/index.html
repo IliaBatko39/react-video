@@ -21,15 +21,44 @@
              letter-spacing: -.02em; }
   .caption em { font-style: normal; color: var(--acc); }
 
-  /* сцена 3: обычные CSS @keyframes; main.js ставит их на паузу и выставляет currentTime = t·1000 */
-  #css .caption { top: 330px; }
-  .tiles { position: absolute; left: 80px; top: 760px; width: 860px; display: flex; justify-content: space-between; }
+  /* сцена «чат»: запрос словами → готовый файл */
+  .term { position: absolute; left: 80px; top: 490px; width: 860px; box-sizing: border-box; padding: 40px 48px 52px;
+          border-radius: 36px; background: #16171b; border: 2px solid #26272d; }
+  .term-head { display: flex; align-items: center; gap: 14px; padding-bottom: 30px; margin-bottom: 44px; border-bottom: 2px solid #26272d;
+               font-weight: 700; font-size: 34px; color: var(--dim); }
+  .term-head i { width: 18px; height: 18px; border-radius: 50%; background: #3a3b42; }
+  .term-head i:first-child { background: var(--acc); }
+  .term-head span { margin-left: 14px; }
+  .prompt { font-weight: 700; font-size: 60px; line-height: 1.22; letter-spacing: -.01em; min-height: 146px; }
+  .prompt .gt { color: var(--acc); }
+  .prompt .rest { color: transparent; }                /* ненапечатанное — прозрачное: строки не прыгают при печати */
+  .caret { display: inline-block; width: 0; height: .95em; vertical-align: -.12em; border-left: 6px solid var(--acc); margin-right: -6px; }
+  .progress { display: flex; align-items: center; gap: 28px; margin-top: 52px; font-weight: 600; font-size: 36px;
+              color: var(--dim); font-variant-numeric: tabular-nums; }
+  .pbar { flex: 1; height: 10px; border-radius: 5px; background: #2a2b31; overflow: hidden; }
+  .pfill { height: 100%; background: var(--acc); transform-origin: 0 50%; }
+  .result { display: flex; align-items: center; gap: 32px; margin-top: 52px; }
+  .check { flex: none; width: 88px; height: 88px; border-radius: 50%; background: var(--acc); position: relative; }
+  .check::after { content: ''; position: absolute; left: 30px; top: 18px; width: 22px; height: 40px;
+                  border: solid var(--bg); border-width: 0 10px 10px 0; transform: rotate(45deg); }
+  .result .txt { flex: 1; }
+  .file { font-weight: 800; font-size: 66px; line-height: 1.05; }
+  .meta { font-weight: 600; font-size: 44px; line-height: 1.3; color: #c9c5bd; }
+  .thumb { flex: none; width: 126px; height: 224px; border-radius: 14px; background: var(--bg); border: 2px solid #3a3b42;
+           display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; }
+  .thumb b { font-family: 'Unbounded'; font-weight: 900; font-size: 21px; line-height: 1.05; text-align: center; color: var(--acc); }
+  .thumb i { width: 26px; height: 4px; background: var(--ink); }
+
+  /* сцена CSS: обычные @keyframes; main.js ставит их на паузу и выставляет currentTime = t·1000.
+     Задержка анимаций = начало сцены из timeline.json (переменная --css-t0 ставится в main.js). */
+  #css .caption { top: 280px; font-size: 84px; }
+  .tiles { position: absolute; left: 80px; top: 700px; width: 860px; display: flex; justify-content: space-between; }
   .tile { width: 230px; height: 230px; border-radius: 28px; background: #1b1c21; position: relative; }
   .tile i { position: absolute; left: 55px; top: 55px; width: 120px; height: 120px; border-radius: 22px; background: var(--ink); }
-  .tile .spin { animation: spin 2s linear 4.5s infinite; border-radius: 18px; }
-  .tile .hop  { animation: hop .5s 4.5s infinite; background: var(--acc); border-radius: 50%; }
-  .tile .pulse { animation: pulse 1s ease-in-out 4.5s infinite; background: transparent; border: 12px solid var(--ink); box-sizing: border-box; }
-  .tile span { position: absolute; left: 0; right: 0; bottom: -58px; text-align: center; font-weight: 600; font-size: 30px; color: var(--dim); }
+  .tile .spin { animation: spin 2s linear var(--css-t0) infinite; border-radius: 18px; }
+  .tile .hop  { animation: hop .5s var(--css-t0) infinite; background: var(--acc); border-radius: 50%; }
+  .tile .pulse { animation: pulse 1s ease-in-out var(--css-t0) infinite; background: transparent; border: 12px solid var(--ink); box-sizing: border-box; }
+  .tile span { position: absolute; left: 0; right: 0; bottom: -66px; text-align: center; font-weight: 600; font-size: 36px; color: var(--dim); }
   @keyframes spin  { to { transform: rotate(360deg); } }
   @keyframes hop   { 0% { transform: translateY(0) scale(1.12, .88); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
                      12% { transform: translateY(-20px) scale(.94, 1.06); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
@@ -37,37 +66,51 @@
                      100% { transform: translateY(0) scale(1.12, .88); } }
   @keyframes pulse { 0%, 100% { transform: scale(.7); border-radius: 60px; } 50% { transform: scale(1); border-radius: 22px; } }
 
-  .track { position: absolute; left: 80px; top: 1200px; width: 860px; height: 4px; background: #2a2b31; border-radius: 2px; }
+  .track { position: absolute; left: 80px; top: 1150px; width: 860px; height: 4px; background: #2a2b31; border-radius: 2px; }
   .track .fill { position: absolute; left: 0; top: 0; height: 4px; width: 100%; background: var(--acc); transform-origin: 0 50%;
-                 animation: scrub 2s linear 4.5s both; }
+                 animation: scrub 2s linear var(--css-t0) both; }
   .track .beat { position: absolute; top: -10px; width: 4px; height: 24px; background: #3a3b42; border-radius: 2px; }
   .track .head { position: absolute; top: -17px; width: 38px; height: 38px; margin-left: -19px; border-radius: 50%; background: var(--acc);
-                 animation: head 2s linear 4.5s both; }
+                 animation: head 2s linear var(--css-t0) both; }
   @keyframes scrub { from { transform: scaleX(0); } to { transform: scaleX(1); } }
   @keyframes head  { from { left: 0; } to { left: 100%; } }
-  .readout { position: absolute; left: 80px; top: 1260px; width: 860px; display: flex; justify-content: space-between;
+  .readout { position: absolute; left: 80px; top: 1200px; width: 860px; display: flex; justify-content: space-between; align-items: baseline;
              font-weight: 600; font-size: 40px; font-variant-numeric: tabular-nums; color: var(--dim); }
+  .readout b { font-size: 64px; }
   .readout b { color: var(--ink); font-weight: 800; }
 
-  #three .caption { top: 1250px; }
-  #three .shade { position: absolute; left: 0; right: 0; top: 1060px; bottom: 0;
+  #three .caption { top: 1300px; }
+  #three .shade { position: absolute; left: 0; right: 0; top: 1130px; bottom: 0;
                   background: linear-gradient(to bottom, rgba(13,14,17,0), rgba(13,14,17,.88) 38%, rgba(13,14,17,.95)); }
   #final .sub { position: absolute; left: 80px; width: 860px; top: 1215px; text-align: center; font-weight: 700; font-size: 60px; }
+  #final .url { position: absolute; left: 80px; width: 860px; top: 1318px; text-align: center; font-weight: 600; font-size: 38px; color: #b9b5ad; }
 </style>
 </head>
 <body>
 <canvas id="gl" width="1080" height="1920"></canvas>
 <canvas id="c2" width="1080" height="1920"></canvas>
 
+<section class="layer" id="chat">
+  <div class="term" data-check="terminal">
+    <div class="term-head"><i></i><i></i><i></i><span>Claude Code</span></div>
+    <div class="prompt" data-read><span class="gt">›</span> <span id="typed"></span><span class="caret" id="caret"></span><span class="rest" id="rest"></span></div>
+    <div class="progress" id="prog"><div class="pbar"><div class="pfill" id="pfill"></div></div><span id="pnum">кадр 0 / 360</span></div>
+    <div class="result" id="res">
+      <div class="check" id="chk"></div>
+      <div class="txt"><div class="file" data-read>promo.mp4</div><div class="meta" data-read>1080×1920 · со&nbsp;звуком</div></div>
+      <div class="thumb" id="thumb"><b>react-<br>video</b><i></i></div>
+    </div>
+  </div>
+</section>
+
 <section class="layer" id="three">
   <div class="shade"></div>
   <div class="kicker" data-check data-read>WebGL <b>·</b> three.js</div>
-  <div class="caption" data-check data-read>3D без&nbsp;видеокарты</div>
+  <div class="caption" data-check data-read>3D на&nbsp;сервере без&nbsp;видеокарты</div>
 </section>
 
 <section class="layer" id="css">
-  <div class="kicker" data-check data-read>CSS <b>·</b> DOM</div>
-  <div class="caption" data-check data-read>Кадр&nbsp;= <em>функция времени</em></div>
+  <div class="caption" data-check data-read>Не&nbsp;запись экрана&nbsp;— <em>рендер по&nbsp;кадрам</em></div>
   <div class="tiles" data-check="tiles">
     <div class="tile"><i class="spin"></i><span>spin</span></div>
     <div class="tile"><i class="hop"></i><span>hop</span></div>
@@ -79,6 +122,7 @@
 
 <section class="layer" id="final">
   <div class="sub" data-check data-read>скилл для&nbsp;Claude&nbsp;Code</div>
+  <div class="url" data-check data-read>github.com/IliaBatko39/react-video</div>
 </section>
 
 <canvas id="fx" width="1080" height="1920"></canvas>

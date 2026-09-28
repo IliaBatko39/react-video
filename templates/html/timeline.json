@@ -1,23 +1,29 @@
 {
- "fps": 30, "width": 1080, "height": 1920, "end": 8.0, "bpm": 120, "key": "Am",
+ "fps": 30, "width": 1080, "height": 1920, "end": 12.0, "bpm": 120, "key": "Am",
  "scenes": [
   {"id": "title", "t0": 0.0, "t1": 2.0},
-  {"id": "three", "t0": 2.0, "t1": 4.5},
-  {"id": "css", "t0": 4.5, "t1": 6.5},
-  {"id": "final", "t0": 6.5, "t1": 8.0}
+  {"id": "chat", "t0": 2.0, "t1": 5.0},
+  {"id": "three", "t0": 5.0, "t1": 7.5},
+  {"id": "css", "t0": 7.5, "t1": 9.5},
+  {"id": "final", "t0": 9.5, "t1": 12.0}
  ],
- "music": {"intro": [0.0, 2.0], "main": [2.0, 6.5], "gap": [6.25, 6.5], "outro": [6.5, 8.0]},
+ "music": {"intro": [0.0, 2.0], "main": [2.0, 9.5], "gap": [9.25, 9.5], "outro": [9.5, 12.0]},
  "cues": [
   {"t": 0.0, "type": "tick", "n": 3, "step": 0.5},
   {"t": 1.5, "type": "click"},
   {"t": 1.75, "type": "whoosh", "dur": 0.25},
   {"t": 2.0, "type": "hit"},
-  {"t": 3.0, "type": "tick", "n": 3, "step": 0.5},
-  {"t": 4.25, "type": "whoosh", "dur": 0.25},
-  {"t": 4.5, "type": "hit"},
-  {"t": 5.0, "type": "tick", "n": 2, "step": 0.5},
-  {"t": 5.5, "type": "riser", "dur": 0.75},
-  {"t": 6.5, "type": "boom"},
-  {"t": 6.9, "type": "swell", "dur": 1.1}
+  {"t": 2.25, "type": "tick", "n": 8, "step": 0.125},
+  {"t": 3.25, "type": "click"},
+  {"t": 4.0, "type": "hit"},
+  {"t": 4.75, "type": "whoosh", "dur": 0.25},
+  {"t": 5.0, "type": "hit"},
+  {"t": 6.0, "type": "tick", "n": 3, "step": 0.5},
+  {"t": 7.25, "type": "whoosh", "dur": 0.25},
+  {"t": 7.5, "type": "hit"},
+  {"t": 8.0, "type": "tick", "n": 2, "step": 0.5},
+  {"t": 8.75, "type": "riser", "dur": 0.5},
+  {"t": 9.5, "type": "boom"},
+  {"t": 10.0, "type": "swell", "dur": 2.0}
  ]
 }
