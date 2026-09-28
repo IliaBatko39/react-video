@@ -52,7 +52,13 @@ claude
 
 Нужны Python 3.10+ и ffmpeg; для React-шаблона — ещё Node.js 20.19+ или 22.12+.
 
-Проверить окружение: попросите Claude «проверь окружение для роликов» — скилл сам запустит `check_env.py`. Из клона репозитория — `python3 scripts/check_env.py --gl`. Скрипт проверит Python-модули, Chromium, ffmpeg, WebGL и Node и подскажет, чего не хватает.
+Проверить окружение — вызовите скилл командой в Claude Code:
+
+```
+/react-video:react-video проверь окружение
+```
+
+При ручной установке команда короче: `/react-video проверь окружение`. Из клона репозитория — `python3 scripts/check_env.py --gl`. Скрипт проверит Python-модули, Chromium, ffmpeg, WebGL и Node и подскажет, чего не хватает. Первым шагом каждого ролика скилл проверяет окружение и сам.
 
 ## Как пользоваться
 
@@ -61,6 +67,8 @@ claude
 - «Сделай 20-секундный ролик по этой презентации, вертикальный»
 - «Промо-ролик для лендинга с диктором»
 - «Шоурил под музыку по нашим услугам»
+
+Если Claude не подхватил скилл сам, вызовите его явно: `/react-video:react-video` и задача следом (при ручной установке — `/react-video`).
 
 Скилл ведёт по шагам: раскадровка → ваше «ок» → сцена → рендер → звук → проверка → выдача. На выходе — оригинал, лёгкая копия для мессенджеров, постер и лист кадров.
 
@@ -133,6 +141,6 @@ sudo apt install ffmpeg        # macOS: brew install ffmpeg
 
 On Ubuntu 23.04+ and Debian 12 the system pip is locked (`externally-managed-environment`). Install into a venv and start Claude Code from it: `python3 -m venv ~/.venvs/react-video && source ~/.venvs/react-video/bin/activate`, then the commands above, then `claude`.
 
-You need Python 3.10+ and ffmpeg; the React template also needs Node.js 20.19+ or 22.12+. To check your setup, ask Claude to "check the environment for videos" and the skill runs `check_env.py` itself. From a clone: `python3 scripts/check_env.py --gl`.
+You need Python 3.10+ and ffmpeg; the React template also needs Node.js 20.19+ or 22.12+. To check your setup, run `/react-video:react-video check the environment` in Claude Code (`/react-video …` for a manual install), or `python3 scripts/check_env.py --gl` from a clone. If Claude doesn't pick up the skill on its own, call it the same way with your task.
 
 The skill instructions are written in Russian; Claude follows them in any language you use.
