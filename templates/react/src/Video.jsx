@@ -14,7 +14,11 @@ export function MetricCard({ label, value, delta, bars, grow, badge }) {
         <span className="card-label" data-read="">{label}</span>
         <span className="badge" style={{ opacity: badge, transform: `scale(${0.6 + 0.4 * badge})` }}>+{delta}&nbsp;%</span>
       </div>
-      <div className="card-value">{fmt(value)}</div>
+      <div className="card-value-row">
+        <div className="card-value">{fmt(value)}</div>
+        {/* цифра выдуманная — подпись обязательна (reference/genres.md); в чтение не входит, в безопасную зону — да */}
+        <span className="demo-note" data-check="">демо-данные</span>
+      </div>
       <div className="chart">
         {bars.map((h, k) => (
           <div className="col" key={k}>

@@ -14,8 +14,8 @@
 ```bash
 python3 scripts/check_env.py --gl                                   # окружение
 claude plugin validate --strict . && claude plugin validate --strict .claude-plugin/plugin.json
-cp -r templates/html /tmp/t && python3 scripts/layout_check.py --dir /tmp/t
-python3 scripts/render.py stills 0.5,3,5.5,7.6 --dir /tmp/t          # смотреть глазами
+mkdir -p /tmp/t && cp -R templates/html/. /tmp/t/ && python3 scripts/layout_check.py --dir /tmp/t
+python3 scripts/render.py stills 1,3.5,6.2,8.5,10.8 --dir /tmp/t         # смотреть глазами
 ```
 Релиз: поднять `version` в `plugin.json`, `claude plugin tag . --push`.
 
@@ -25,6 +25,7 @@ python3 scripts/render.py stills 0.5,3,5.5,7.6 --dir /tmp/t          # смот�
 - В шаблонах — только свободные ассеты (шрифты OFL с файлом лицензии рядом). Музыку без лицензии не класть.
 - Тяжёлое (`node_modules`, кадры, wav, mp4) — в `.gitignore`; в `docs/` только лёгкая витрина.
 - Один Chromium за раз: 3D-рендер с размытием ест до 2,5 ГБ памяти.
+- Этот файл лежит в `.claude/`, а не в корне: иначе плагин не проходит `validate --strict` (CLAUDE.md в корне плагина не грузится как контекст проекта).
 
 ## Открытые решения
 - Английская версия SKILL.md — по спросу.

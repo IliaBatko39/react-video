@@ -19,7 +19,9 @@ body { font-family: 'Manrope', sans-serif; color: var(--ink); -webkit-font-smoot
 .card-head { display: flex; justify-content: space-between; align-items: center; }
 .card-label { font-weight: 600; font-size: 38px; color: var(--dim); }
 .badge { font-weight: 800; font-size: 34px; color: var(--bg); background: var(--acc); padding: 8px 20px; border-radius: 999px; }
-.card-value { font-weight: 800; font-size: 170px; letter-spacing: -.03em; line-height: 1.1; margin: 18px 0 30px; font-variant-numeric: tabular-nums; }
+.card-value-row { margin: 18px 0 30px; }
+.card-value { font-weight: 800; font-size: 170px; letter-spacing: -.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.demo-note { display: inline-block; font-weight: 600; font-size: 30px; color: var(--dim); border: 2px solid #34353c; border-radius: 999px; padding: 6px 18px; white-space: nowrap; }
 .chart { display: flex; justify-content: space-between; align-items: flex-end; height: 380px; }
 .col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; width: 84px; }
 .bar { width: 84px; border-radius: 16px 16px 6px 6px; background: #3a3b42; }

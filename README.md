@@ -1,6 +1,6 @@
 # react-video — ролики из веб-страниц для Claude Code
 
-<p align="center"><img src="docs/demo.gif" width="300" alt="Демо-ролик из шаблона скилла: кинетический заголовок, 3D-сцена, CSS-анимация и финальная карточка"></p>
+<p align="center"><img src="docs/demo.gif" width="300" alt="Демо-ролик из шаблона скилла: кинетический заголовок, запрос в чате Claude Code и готовый mp4, 3D-сцена, CSS-анимация, финальная карточка с адресом репозитория"></p>
 
 Скилл для [Claude Code](https://claude.com/claude-code). Просите «сделай промо-ролик по этой презентации», и Claude собирает сцену на React или HTML, рендерит её покадрово в headless Chromium, синтезирует музыку и эффекты под ту же сетку времени и отдаёт готовый mp4 для Reels, Shorts и Telegram.
 
@@ -32,16 +32,27 @@
 git clone https://github.com/IliaBatko39/react-video ~/.claude/skills/react-video
 ```
 
-Зависимости для рендера:
+Зависимости для рендера. Команды работают из любой папки:
 
 ```bash
-pip install -r requirements.txt
+python3 -m pip install "playwright>=1.59" "numpy>=2.2" "pillow>=12.1" "scipy>=1.15" "soundfile>=0.13"
 python3 -m playwright install chromium
 sudo apt install ffmpeg        # macOS: brew install ffmpeg
-python3 scripts/check_env.py --gl
 ```
 
-Нужны Python 3.10+ и ffmpeg; для React-шаблона — ещё Node.js 20.19+ или 22.12+. `check_env.py` проверит всё сразу и подскажет, чего не хватает.
+На Ubuntu 23.04+ и Debian 12 системный pip закрыт (ошибка `externally-managed-environment`). Поставьте пакеты в venv и запускайте Claude Code из него:
+
+```bash
+python3 -m venv ~/.venvs/react-video
+source ~/.venvs/react-video/bin/activate
+python3 -m pip install "playwright>=1.59" "numpy>=2.2" "pillow>=12.1" "scipy>=1.15" "soundfile>=0.13"
+python3 -m playwright install chromium
+claude
+```
+
+Нужны Python 3.10+ и ffmpeg; для React-шаблона — ещё Node.js 20.19+ или 22.12+.
+
+Проверить окружение: попросите Claude «проверь окружение для роликов» — скилл сам запустит `check_env.py`. Из клона репозитория — `python3 scripts/check_env.py --gl`. Скрипт проверит Python-модули, Chromium, ffmpeg, WebGL и Node и подскажет, чего не хватает.
 
 ## Как пользоваться
 
@@ -56,8 +67,8 @@ python3 scripts/check_env.py --gl
 Собрать демо из шаблона руками:
 
 ```bash
-cp -r templates/html /tmp/demo
-python3 scripts/render.py video /tmp/demo/raw.mp4 --dir /tmp/demo --blur 4 --poster 7.2
+mkdir -p /tmp/demo && cp -R templates/html/. /tmp/demo/
+python3 scripts/render.py video /tmp/demo/raw.mp4 --dir /tmp/demo --blur 4 --poster 10.8
 python3 scripts/audio_bed.py --timeline /tmp/demo/timeline.json --out /tmp/demo/mix.wav --stems /tmp/demo/stems
 bash scripts/finalize.sh /tmp/demo/raw.mp4 /tmp/demo/mix.wav /tmp/demo/out/demo
 ```
@@ -112,6 +123,16 @@ Install as a plugin:
 /plugin install react-video@react-video
 ```
 
-Or clone into `~/.claude/skills/react-video`. Then run `pip install -r requirements.txt`, `python3 -m playwright install chromium`, install ffmpeg, and check with `python3 scripts/check_env.py --gl`.
+Or clone into `~/.claude/skills/react-video`. Then install the dependencies (works from any folder):
+
+```bash
+python3 -m pip install "playwright>=1.59" "numpy>=2.2" "pillow>=12.1" "scipy>=1.15" "soundfile>=0.13"
+python3 -m playwright install chromium
+sudo apt install ffmpeg        # macOS: brew install ffmpeg
+```
+
+On Ubuntu 23.04+ and Debian 12 the system pip is locked (`externally-managed-environment`). Install into a venv and start Claude Code from it: `python3 -m venv ~/.venvs/react-video && source ~/.venvs/react-video/bin/activate`, then the commands above, then `claude`.
+
+You need Python 3.10+ and ffmpeg; the React template also needs Node.js 20.19+ or 22.12+. To check your setup, ask Claude to "check the environment for videos" and the skill runs `check_env.py` itself. From a clone: `python3 scripts/check_env.py --gl`.
 
 The skill instructions are written in Russian; Claude follows them in any language you use.

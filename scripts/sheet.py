@@ -94,6 +94,7 @@ def main():
         x, y = pad + c * (tw + pad), pad + r * (th + pad + lab)
         sheet.paste(im.resize((tw, th), Image.LANCZOS), (x, y))
         d.text((x + 4, y + th + 4), label, fill=(240, 240, 240), font=font)
+    os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
     sheet.save(a.out, quality=90)
     print('sheet ok: %s — %d кадров, %dx%d' % (a.out, len(items), *sheet.size))
 

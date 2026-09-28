@@ -1,20 +1,25 @@
 #!/usr/bin/env python3
-"""Проверка окружения react-video: Python-модули, Chromium для Playwright, ffmpeg с нужными фильтрами.
+"""Проверка окружения react-video: Python-модули, Chromium для Playwright, ffmpeg с нужными фильтрами, Node.js.
 
   check_env.py [--gl]     --gl — ещё проверить WebGL через SwiftShader (3D без видеокарты)
 
-На каждую проблему печатает команду установки. Код выхода 1, если что-то не так.
+Node.js проверяется как предупреждение: он нужен только для React-шаблона.
+На каждую проблему печатает команду установки. Код выхода 1, если что-то не так (Node на код не влияет).
 """
 import argparse
 import importlib
+import os
 import platform
+import re
 import shutil
 import subprocess
 import sys
 
 MODULES = [('playwright', 'playwright'), ('numpy', 'numpy'), ('PIL', 'pillow'), ('scipy', 'scipy'),
            ('soundfile', 'soundfile')]
+REQUIREMENTS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'requirements.txt')
 problems = []
+warnings = []
 
 
 def ok(msg):
@@ -24,6 +29,11 @@ def ok(msg):
 def bad(msg, fix):
     print('  НЕТ  ' + msg)
     problems.append((msg, fix))
+
+
+def warn(msg, fix):
+    print('  ВНИМ ' + msg)
+    warnings.append((msg, fix))
 
 
 def ffmpeg_hint():
@@ -51,7 +61,7 @@ def check_python():
                     ver = '?'
             ok('%s %s' % (pkg, ver))
         except Exception as e:
-            bad('модуль %s (%s)' % (pkg, e.__class__.__name__), 'python3 -m pip install -r requirements.txt   (или: pip install %s)' % pkg)
+            bad('модуль %s (%s)' % (pkg, e.__class__.__name__), 'python3 -m pip install -r "%s"   (или: python3 -m pip install %s)' % (REQUIREMENTS, pkg))
 
 
 def check_ffmpeg():
@@ -76,6 +86,32 @@ def check_ffmpeg():
             ok('кодер ' + e)
         else:
             bad('кодер ' + e, 'нужен ffmpeg с libx264 (сборка из репозитория ОС): ' + ffmpeg_hint())
+
+
+NODE_FIX = 'Node.js 20.19+ или 22.12+ (Node 21 не подходит): https://nodejs.org или nvm install 22'
+
+
+def check_node():
+    print('Node.js (только для React-шаблона)')
+    node = shutil.which('node')
+    if not node:
+        warn('нет node в PATH — без него работает только HTML-шаблон', NODE_FIX)
+        return
+    try:
+        out = subprocess.run([node, '--version'], capture_output=True, text=True, timeout=10).stdout.strip()
+    except Exception as e:
+        warn('node --version не отработал (%s)' % e.__class__.__name__, NODE_FIX)
+        return
+    m = re.match(r'v?(\d+)\.(\d+)\.(\d+)', out)
+    if not m:
+        warn('непонятная версия Node: %r' % out, NODE_FIX)
+        return
+    v = tuple(int(x) for x in m.groups())
+    # Vite 8: ^20.19.0 || >=22.12.0
+    if (v[0] == 20 and v >= (20, 19, 0)) or v >= (22, 12, 0):
+        ok('Node.js %s' % out)
+    else:
+        warn('Node.js %s — Vite 8 нужен 20.19+ или 22.12+' % out, NODE_FIX)
 
 
 GL_JS = '''() => {
@@ -125,7 +161,12 @@ def main():
     check_python()
     check_ffmpeg()
     check_chromium(a.gl)
+    check_node()
     print()
+    if warnings:
+        print('Предупреждений: %d (на код выхода не влияют):' % len(warnings))
+        for msg, fix in warnings:
+            print('  - %s:\n      %s' % (msg, fix))
     if problems:
         print('Проблем: %d. Что сделать:' % len(problems))
         for msg, fix in problems:

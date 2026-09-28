@@ -38,19 +38,24 @@
 
 Диктор называет каждую услугу («Неоновые вывески. Широкоформатная печать…»), и два-три слова не влезают в сцену длиной в секунду. Поэтому версия с голосом длиннее: например, 20 → 25 секунд при том же темпе музыки и склейках на доли.
 
-Сцены не перерисовываются — время перекартируется:
+Сцены не перерисовываются — время перекартируется. Команды — из папки проекта, сцена лежит в `video/`, как в SKILL.md:
 
 ```bash
 # 1. точки перекарты [новое, старое] → новый таймлайн (cues, сцены и секции музыки пересчитаны)
-python3 scripts/remap.py timeline.json remap.json -o timeline_long.json
+python3 scripts/remap.py video/timeline.json remap.json -o timeline_long.json
 # 2. музыка и эффекты под новый таймлайн — в отдельные файлы, чтобы не затереть короткую версию
 python3 scripts/audio_bed.py --timeline timeline_long.json --out mix_long.wav --stems stems_long
 # 3. голос по плану фраз, музыка приседает под голос
 python3 scripts/vo_mix.py vo_plan.json
 # 4. картинка: время кадра переводится в старое кусочно-линейно, подкадры размытия тоже
-python3 scripts/render.py video raw_long.mp4 --blur 6 --remap timeline_long.json
+python3 scripts/render.py video raw_long.mp4 --dir video --blur 6 --remap timeline_long.json
 bash scripts/finalize.sh raw_long.mp4 vo_mix.wav out/showreel_long
 ```
+
+- Страница по-прежнему берёт короткий `timeline.json` из папки `--dir`, его не трогай. Длинный таймлайн нужен только звуку и флагу `--remap`.
+- Путь `--remap` ищется сначала от текущей папки, потом от `--dir`. Поэтому `timeline_long.json` из папки проекта найдётся без лишних путей.
+- React: исходный таймлайн — `video/public/timeline.json`, рендер — с `--dir video/dist` после `npm run build`.
+- В `vo_plan.json` длинной версии укажи длинные файлы: `"timeline": "timeline_long.json"`, `"bed": {"stems": "stems_long", …}`. Пути в плане считаются от папки, где лежит сам план, а не от текущей. Формат плана → `audio-voice.md`.
 
 `remap.json` — `{"remap": [[0, 0], [2, 2], [3.15, 3.0], …]}`: пары «новое время, старое время». Новое строго растёт, старое не убывает (стоит на месте — стоп-кадр).
 
