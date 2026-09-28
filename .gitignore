@@ -1,0 +1,18 @@
+# зависимости и сборка
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.venv/
+
+# рабочие файлы рендера — не для репозитория
+stills/
+frames/
+out/
+*.mp4
+*.wav
+*.mp3
+*.m4a
+!docs/*.mp4
+.backups/
+.DS_Store
