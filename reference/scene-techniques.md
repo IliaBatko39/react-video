@@ -23,7 +23,7 @@ ES-модули и `fetch` со страницы, открытой через `f
 - WebGL на сервере без GPU работает через SwiftShader. `render.py` запускает Chromium с флагами `--use-angle=swiftshader --enable-unsafe-swiftshader --ignore-gpu-blocklist`; с `--gpu` — без них.
 - У рендерера three.js — `preserveDrawingBuffer: true`, как в шаблоне.
 - Сцена с тенями отрисовывается за миллисекунды, упор — в сам снимок (0,2–0,3 с на кадр).
-- Шаблон подключает three.js с CDN по точной версии через `importmap`. Для офлайн-рендера положи `three.module.min.js` и `three.core.min.js` в проект и поправь `importmap`.
+- Шаблон подключает three.js с CDN по точной версии через `importmap`. Для офлайн-рендера скачай `three.module.js` и `three.core.js` той же версии (папка `build` пакета three) в проект и поправь `importmap`.
 - SVGLoader из three.js не читает CSS-классы из `<style>` — так экспортирует CorelDRAW. Пути выбирай по порядку или по габаритам, цвета бери из своего разбора `<style>`.
 
 ## Шрифты

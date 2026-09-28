@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>react-video — демо-ролик</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<!-- three.js с CDN, точная версия: кадры должны быть одинаковыми сегодня и через год -->
+<script type="importmap">{"imports": {"three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js"}}</script>
+<style>
+  :root { --bg: #0d0e11; --ink: #f2efe8; --dim: #8c8a85; --acc: #ff5b2e; }
+  html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+  body { font-family: 'Manrope', sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  canvas, .layer { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+  .layer { visibility: hidden; }
+
+  /* подписи сцен: безопасная зона Reels — y 220…1500, x 80…940 */
+  .kicker { position: absolute; left: 80px; top: 250px; font-weight: 700; font-size: 34px; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--dim); }
+  .kicker b { color: var(--acc); font-weight: 800; }
+  .caption { position: absolute; left: 80px; width: 860px; font-weight: 800; font-size: 92px; line-height: 1.02;
+             letter-spacing: -.02em; }
+  .caption em { font-style: normal; color: var(--acc); }
+
+  /* сцена 3: обычные CSS @keyframes; main.js ставит их на паузу и выставляет currentTime = t·1000 */
+  #css .caption { top: 330px; }
+  .tiles { position: absolute; left: 80px; top: 760px; width: 860px; display: flex; justify-content: space-between; }
+  .tile { width: 230px; height: 230px; border-radius: 28px; background: #1b1c21; position: relative; }
+  .tile i { position: absolute; left: 55px; top: 55px; width: 120px; height: 120px; border-radius: 22px; background: var(--ink); }
+  .tile .spin { animation: spin 2s linear 4.5s infinite; border-radius: 18px; }
+  .tile .hop  { animation: hop .5s 4.5s infinite; background: var(--acc); border-radius: 50%; }
+  .tile .pulse { animation: pulse 1s ease-in-out 4.5s infinite; background: transparent; border: 12px solid var(--ink); box-sizing: border-box; }
+  .tile span { position: absolute; left: 0; right: 0; bottom: -58px; text-align: center; font-weight: 600; font-size: 30px; color: var(--dim); }
+  @keyframes spin  { to { transform: rotate(360deg); } }
+  @keyframes hop   { 0% { transform: translateY(0) scale(1.12, .88); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+                     12% { transform: translateY(-20px) scale(.94, 1.06); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+                     50% { transform: translateY(-190px) scale(1); animation-timing-function: cubic-bezier(.7, 0, .8, .3); }
+                     100% { transform: translateY(0) scale(1.12, .88); } }
+  @keyframes pulse { 0%, 100% { transform: scale(.7); border-radius: 60px; } 50% { transform: scale(1); border-radius: 22px; } }
+
+  .track { position: absolute; left: 80px; top: 1200px; width: 860px; height: 4px; background: #2a2b31; border-radius: 2px; }
+  .track .fill { position: absolute; left: 0; top: 0; height: 4px; width: 100%; background: var(--acc); transform-origin: 0 50%;
+                 animation: scrub 2s linear 4.5s both; }
+  .track .beat { position: absolute; top: -10px; width: 4px; height: 24px; background: #3a3b42; border-radius: 2px; }
+  .track .head { position: absolute; top: -17px; width: 38px; height: 38px; margin-left: -19px; border-radius: 50%; background: var(--acc);
+                 animation: head 2s linear 4.5s both; }
+  @keyframes scrub { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes head  { from { left: 0; } to { left: 100%; } }
+  .readout { position: absolute; left: 80px; top: 1260px; width: 860px; display: flex; justify-content: space-between;
+             font-weight: 600; font-size: 40px; font-variant-numeric: tabular-nums; color: var(--dim); }
+  .readout b { color: var(--ink); font-weight: 800; }
+
+  #three .caption { top: 1250px; }
+  #three .shade { position: absolute; left: 0; right: 0; top: 1060px; bottom: 0;
+                  background: linear-gradient(to bottom, rgba(13,14,17,0), rgba(13,14,17,.88) 38%, rgba(13,14,17,.95)); }
+  #final .sub { position: absolute; left: 80px; width: 860px; top: 1215px; text-align: center; font-weight: 700; font-size: 60px; }
+</style>
+</head>
+<body>
+<canvas id="gl" width="1080" height="1920"></canvas>
+<canvas id="c2" width="1080" height="1920"></canvas>
+
+<section class="layer" id="three">
+  <div class="shade"></div>
+  <div class="kicker" data-check data-read>WebGL <b>·</b> three.js</div>
+  <div class="caption" data-check data-read>3D без&nbsp;видеокарты</div>
+</section>
+
+<section class="layer" id="css">
+  <div class="kicker" data-check data-read>CSS <b>·</b> DOM</div>
+  <div class="caption" data-check data-read>Кадр&nbsp;= <em>функция времени</em></div>
+  <div class="tiles" data-check="tiles">
+    <div class="tile"><i class="spin"></i><span>spin</span></div>
+    <div class="tile"><i class="hop"></i><span>hop</span></div>
+    <div class="tile"><i class="pulse"></i><span>pulse</span></div>
+  </div>
+  <div class="track" data-check="track"><div class="fill"></div><div class="head"></div></div>
+  <div class="readout" data-check="readout"><span>currentTime</span><b id="tval">0,00 с</b></div>
+</section>
+
+<section class="layer" id="final">
+  <div class="sub" data-check data-read>скилл для&nbsp;Claude&nbsp;Code</div>
+</section>
+
+<canvas id="fx" width="1080" height="1920"></canvas>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -41,7 +41,7 @@ sudo apt install ffmpeg        # macOS: brew install ffmpeg
 python3 scripts/check_env.py --gl
 ```
 
-`check_env.py` проверит всё сразу и подскажет, чего не хватает. Для React-шаблона нужен ещё Node.js.
+Нужны Python 3.10+ и ffmpeg; для React-шаблона — ещё Node.js 20.19+ или 22.12+. `check_env.py` проверит всё сразу и подскажет, чего не хватает.
 
 ## Как пользоваться
 

@@ -1,0 +1,36 @@
+:root { --bg: #0d0e11; --ink: #f2efe8; --dim: #8c8a85; --acc: #ff5b2e; }
+html, body { margin: 0; overflow: hidden; background: var(--bg); }
+body { font-family: 'Manrope', sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+.frame { position: relative; overflow: hidden; background: var(--bg); }
+.stage, .scene { position: absolute; inset: 0; }
+.acc { color: var(--acc); }
+.nowrap { white-space: nowrap; }
+
+/* безопасная зона Reels: y 220…1500, x 80…940 */
+.kicker { position: absolute; left: 80px; font-weight: 700; font-size: 34px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.kicker b { color: var(--acc); font-weight: 800; }
+.title-kicker { top: 700px; }
+.title { position: absolute; left: 80px; top: 770px; width: 860px; font-family: 'Unbounded'; font-weight: 900; font-size: 112px; line-height: 1.12; }
+.mask { overflow: hidden; }
+
+.metric-kicker { top: 250px; }
+.card-wrap { position: absolute; left: 80px; top: 330px; width: 860px; }
+.card { box-sizing: border-box; width: 860px; padding: 56px 56px 48px; border-radius: 40px; background: #17181c; border: 2px solid #25262c; }
+.card-head { display: flex; justify-content: space-between; align-items: center; }
+.card-label { font-weight: 600; font-size: 38px; color: var(--dim); }
+.badge { font-weight: 800; font-size: 34px; color: var(--bg); background: var(--acc); padding: 8px 20px; border-radius: 999px; }
+.card-value { font-weight: 800; font-size: 170px; letter-spacing: -.03em; line-height: 1.1; margin: 18px 0 30px; font-variant-numeric: tabular-nums; }
+.chart { display: flex; justify-content: space-between; align-items: flex-end; height: 380px; }
+.col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; width: 84px; }
+.bar { width: 84px; border-radius: 16px 16px 6px 6px; background: #3a3b42; }
+.bar-acc { background: var(--acc); }
+.col span { margin-top: 18px; font-weight: 600; font-size: 28px; color: var(--dim); }
+.caption { position: absolute; left: 80px; top: 1330px; width: 860px; font-weight: 800; font-size: 72px; line-height: 1.05; letter-spacing: -.02em; }
+
+.logo { position: absolute; left: 80px; top: 640px; width: 860px; text-align: center; font-family: 'Unbounded'; font-weight: 900;
+        font-size: 176px; line-height: 1.02; transform-origin: 50% 50%; }
+.logo > span { display: inline-block; }
+.sub { position: absolute; left: 80px; top: 1130px; width: 860px; text-align: center; font-weight: 700; font-size: 60px; }
+
+.flash { position: absolute; inset: 0; background: var(--acc); pointer-events: none; }
+.grain { position: absolute; left: 0; top: 0; opacity: .07; mix-blend-mode: overlay; pointer-events: none; }
